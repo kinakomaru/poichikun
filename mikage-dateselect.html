@@ -1,0 +1,142 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GS4 御影｜デート選択肢早見</title>
+<style>
+ body{font-family:system-ui,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;margin:0;background:#fff;color:#333}
+ header{padding:14px 16px;border-bottom:1px solid #eee}
+ h1{font-size:18px;margin:0}
+ .bar{display:flex;gap:8px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid #eee}
+ input,select,textarea{padding:10px;border:1px solid #eee;border-radius:10px}
+ .wrap{padding:10px 16px}
+ .card{border:1px solid #eee;border-radius:14px;padding:12px;margin:10px 0;background:#fff}
+ .row{display:grid;grid-template-columns:160px 1fr;gap:10px}
+ .chip{display:inline-block;background:#f5f7f8;border-radius:999px;padding:2px 8px;font-size:12px;margin-right:6px}
+ details{border:1px dashed #eee;border-radius:12px;padding:8px;margin-top:8px}
+ summary{cursor:pointer;font-weight:600}
+ .small{font-size:12px;color:#777}
+ .hidden{display:none}
+ button{padding:8px 10px;border:1px solid #eee;border-radius:10px;background:#fff;cursor:pointer}
+ textarea{width:100%;min-height:120px}
+</style></head><body>
+<header><h1>御影小次郎｜デート選択肢早見</h1></header>
+
+<div class="bar">
+ <input id="q" type="search" placeholder="キーワード検索（例：遊園地, ボウリング, アツアツアーチ）" style="flex:1">
+ <select id="fav">
+   <option value="">好みフィルタ</option>
+   <option value="love">大好き（◎）</option>
+   <option value="like">好き（○）</option>
+   <option value="bad">苦手（×）</option>
+ </select>
+ <select id="area">
+   <option value="">場所カテゴリ</option>
+   <option>遊園地</option><option>ボウリング</option><option>美術館</option><option>映画</option><option>ショッピング</option>
+ </select>
+ <button id="btnCopy">表示中をコピー</button>
+</div>
+
+<div class="wrap">
+ <details>
+   <summary>CSV貼り付けで一括追加（あとからでOK）</summary>
+   <p class="small">列：場所,カテゴリ,好み(love/like/bad),天候(任意),選択肢-良,選択肢-可,選択肢-不可,メモ</p>
+   <textarea id="csv"></textarea>
+   <button id="import">取り込む</button>
+ </details>
+
+ <div id="list"></div>
+ <p class="small">※データは随時追記でOK。必要になった場所から入れていこう。</p>
+</div>
+
+<script>
+// ---- データ（まずはサンプル。ここに増やす） -----------------------------
+const data = [
+  {
+    place:"遊園地（観覧車）", category:"遊園地", fav:"love",
+    weather:"晴れ", good:["ゆっくり景色を眺める","写真を撮る提案"],
+    ok:["軽く会話を続ける"], bad:["スリル系に無理やり誘導"],
+    memo:"夜景タイミングは好印象。イルミ対象日なら加点しやすい。"
+  },
+  {
+    place:"ボウリング", category:"ボウリング", fav:"like",
+    weather:"屋内", good:["フォームを褒める","一緒にハイスコア目標を立てる"],
+    ok:["雑談を挟む"], bad:["ミスを茶化す"],
+    memo:"結果コメント後のスキンシップ：目 or 頭（好感度で調整）"
+  },
+  {
+    place:"美術館（常設）", category:"美術館", fav:"love",
+    weather:"雨向き", good:["作品の感想を聞く","静かに鑑賞を楽しむ"],
+    ok:["館内カフェ提案"], bad:["急かす・撮影に夢中"],
+    memo:"芸術値が高い時期は成功体験を積みやすい"
+  }
+];
+// -----------------------------------------------------------------------------
+
+const elQ = document.getElementById('q');
+const elFav = document.getElementById('fav');
+const elArea = document.getElementById('area');
+const elList = document.getElementById('list');
+
+function render(){
+  const term = elQ.value.trim().toLowerCase();
+  const fav = elFav.value;
+  const area = elArea.value;
+  const shown = [];
+  elList.innerHTML = '';
+  data.forEach(d=>{
+    const text = JSON.stringify(d).toLowerCase();
+    const match = (!term || text.includes(term))
+      && (!fav || d.fav===fav)
+      && (!area || d.category===area);
+    if(!match) return;
+    shown.push(d);
+    const card = document.createElement('div');
+    card.className='card';
+    card.innerHTML = `
+      <div class="row">
+        <div><strong>${d.place}</strong><br>
+          <span class="chip">${d.category}</span>
+          <span class="chip">${labelFav(d.fav)}</span>
+          ${d.weather?`<span class="chip">${d.weather}</span>`:''}
+        </div>
+        <div>
+          <details open><summary>選択肢（良/可/不可）</summary>
+            <div><b>良：</b>${safeList(d.good)}</div>
+            <div><b>可：</b>${safeList(d.ok)}</div>
+            <div><b>不可：</b>${safeList(d.bad)}</div>
+          </details>
+          ${d.memo?`<div class="small" style="margin-top:6px">${escapeHtml(d.memo)}</div>`:''}
+        </div>
+      </div>`;
+    elList.appendChild(card);
+  });
+  document.getElementById('btnCopy').onclick=()=>copyCards(shown);
+}
+function labelFav(v){ return v==='love'?'大好き（◎）':v==='like'?'好き（○）':'苦手（×）'; }
+function safeList(arr){ return (arr||[]).map(escapeHtml).join('／')||'—'; }
+function escapeHtml(s){return String(s).replace(/[&<>"]/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+function copyCards(items){
+  const txt = items.map(d=>[
+    d.place,d.category,labelFav(d.fav),d.weather,
+    (d.good||[]).join(' / '),(d.ok||[]).join(' / '),(d.bad||[]).join(' / '),d.memo||''
+  ].join('\t')).join('\n');
+  navigator.clipboard.writeText(txt);
+}
+elQ.oninput=render; elFav.onchange=render; elArea.onchange=render; render();
+
+// CSV取り込み
+document.getElementById('import').onclick=()=>{
+  const csv = document.getElementById('csv').value.trim();
+  if(!csv) return;
+  csv.split(/\r?\n/).forEach(line=>{
+    const [place,category,fav,weather,good,ok,bad,memo] = line.split(',');
+    data.push({
+      place:(place||'').trim(), category:(category||'').trim(),
+      fav:(fav||'').trim(), weather:(weather||'').trim(),
+      good:(good||'').split('/').map(s=>s.trim()).filter(Boolean),
+      ok:(ok||'').split('/').map(s=>s.trim()).filter(Boolean),
+      bad:(bad||'').split('/').map(s=>s.trim()).filter(Boolean),
+      memo:(memo||'').trim()
+    });
+  });
+  render();
+};
+</script>
+</body></html>

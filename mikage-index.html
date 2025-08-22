@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>GS4 御影｜攻略TOP（リンク＆3年チャート）</title>
+    <style>
+        :root {
+            --bg: #fff;
+            --fg: #333;
+            --muted: #777;
+            --line: #eee;
+            --accent: #0a7;
+            --chip: #f6f7f8
+        }
+
+        body {
+            font-family: system-ui, "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+            margin: 0;
+            background: var(--bg);
+            color: var(--fg)
+        }
+
+        header {
+            padding: 16px;
+            border-bottom: 1px solid var(--line)
+        }
+
+        h1 {
+            font-size: 20px;
+            margin: 0
+        }
+
+        .note {
+            color: var(--muted);
+            font-size: 12px
+        }
+
+        /* カードリンク */
+        .grid {
+            display: grid;
+            gap: 10px;
+            padding: 12px
+        }
+
+        @media(min-width:720px) {
+            .grid {
+                grid-template-columns: 1fr 1fr
+            }
+        }
+
+        .card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 12px;
+            background: #fff;
+            text-decoration: none;
+            color: inherit
+        }
+
+        .card:hover {
+            border-color: var(--accent)
+        }
+
+        .icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--chip);
+            display: grid;
+            place-items: center;
+            font-weight: 700
+        }
+
+        .title {
+            font-weight: 700
+        }
+
+        .sub {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        /* チャート */
+        section {
+            border-top: 1px solid var(--line);
+            padding: 12px
+        }
+
+        h2 {
+            font-size: 16px;
+            margin: 6px 0
+        }
+
+        .tabs {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin: 8px 0
+        }
+
+        .tab {
+            padding: 8px 10px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: #fff;
+            font-size: 13px;
+            cursor: pointer
+        }
+
+        .tab.active {
+            border-color: var(--accent);
+            color: var(--accent)
+        }
+
+        .bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 8px 0
+        }
+
+        input,
+        select,
+        button {
+            padding: 8px 10px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: #fff
+        }
+
+        .months {
+            display: grid;
+            grid-template-columns: repeat(12, minmax(120px, 1fr));
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 6px
+        }
+
+        .m {
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 10px;
+            min-width: 120px;
+            background: #fff
+        }
+
+        .m h3 {
+            font-size: 13px;
+            margin: 0 0 6px;
+            color: #000
+        }
+
+        .pill {
+            display: block;
+            background: var(--chip);
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            /* ← 楕円→角丸へ */
+            padding: 6px 8px;
+            font-size: 12px;
+            line-height: 1.45;
+            white-space: pre-line;
+            /* ← 改行を表示（タイトル→本文） */
+            margin: 0px 3px 6px 0px;
+        }
+
+
+
+        .ed {
+            background: #eafaf3;
+            border: 1px solid #c9f0dd
+        }
+
+        .param {
+            background: #eef6ff;
+            border: 1px solid #d7e8ff
+        }
+
+        .date {
+            background: #fff7e6;
+            border: 1px solid #ffe3b0
+        }
+
+        .event {
+            background: #f9eefc;
+            border: 1px solid #ead7f6
+        }
+
+        .small {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        details {
+            border: 1px dashed var(--line);
+            border-radius: 12px;
+            padding: 8px;
+            margin-top: 8px
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px
+        }
+
+        /* ==== Still Cards ==== */
+        .still-controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 12px 0
+        }
+
+        .still-grid {
+            display: grid;
+            gap: 10px
+        }
+
+        @media(min-width:720px) {
+            .still-grid {
+                grid-template-columns: 1fr 1fr
+            }
+        }
+
+        .still-card {
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: #fff;
+            padding: 10px;
+            cursor: pointer;
+            transition: all .15s ease;
+        }
+
+        .still-card:hover {
+            border-color: var(--accent)
+        }
+
+        .still-title {
+            font-weight: 700;
+            margin-bottom: 4px
+        }
+
+        .still-meta {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 6px
+        }
+
+        .still-cond {
+            font-size: 12px;
+            white-space: pre-line;
+            line-height: 1.45
+        }
+
+        .still-card.collected {
+            border-color: #35c98f;
+            background: #eafaf3;
+            box-shadow: inset 0 0 0 1px #c9f0dd;
+        }
+
+        .still-badge {
+            display: inline-block;
+            background: var(--chip);
+            border-radius: 999px;
+            padding: 2px 8px;
+            font-size: 11px;
+            margin-right: 6px
+        }
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>GS4 御影小次郎｜攻略TOP</h1>
+        <div class="note">スマホ軽量・ワンタップ導線。下に3年間のチャート（編集可）。</div>
+    </header>
+
+    <!-- リンク集 -->
+    <div class="grid">
+        <a class="card" href="mikage.html">
+            <div class="icon">DB</div>
+            <div>
+                <div class="title">御影ミニDB（要点まとめ）</div>
+                <div class="sub">ED条件・スキンシップ・外部原典リンク</div>
+            </div>
+        </a>
+        <a class="card" href="mikage-dateselect.html">
+            <div class="icon">DE</div>
+            <div>
+                <div class="title">デート選択肢 早見</div>
+                <div class="sub">良／可／不可の一発確認・CSV追記OK</div>
+            </div>
+        </a>
+        <a class="card" href="mikage-shop.html">
+            <div class="icon">服</div>
+            <div>
+                <div class="title">ショップ商品属性（服：御影向け）</div>
+                <div class="sub">◎セクシー／◎ワイルド／○ビビッド＋色スウォッチ</div>
+            </div>
+        </a>
+        <a class="card" href="accse.html">
+            <div class="icon">飾</div>
+            <div>
+                <div class="title">アクセ総覧（全キャラ共通）</div>
+                <div class="sub">手袋・バングル・ネックレス… 種別/属性/季節で絞り込み</div>
+            </div>
+        </a>
+    </div>
+
+    <!-- 3年間チャート -->
+    <section>
+        <h2>3年間チャート（軽量版）</h2>
+        <div class="bar">
+            <input id="q" type="search" placeholder="絞り込み（例：パラ/デート/ED/バレンタイン/イルミ）" style="flex:1">
+            <select id="tag">
+                <option value="">タグ（すべて）</option>
+                <option value="param">パラ</option>
+                <option value="date">デート</option>
+                <option value="event">イベント</option>
+                <option value="ed">ED</option>
+                <option value="shop">買い物</option>
+            </select>
+            <button id="btnCopy">表示中をコピー</button>
+        </div>
+
+        <div class="tabs" id="yearTabs">
+            <button class="tab active" data-year="1">1年目</button>
+            <button class="tab" data-year="2">2年目</button>
+            <button class="tab" data-year="3">3年目</button>
+        </div>
+
+        <div id="timeline" class="months" aria-live="polite"></div>
+
+        <details>
+            <summary>CSV貼り付けでチャート編集（任意）</summary>
+            <p class="small">列：年(1/2/3),月(1〜12),タグ(param/date/event/ed/shop),内容,メモ</p>
+            <textarea id="csv"></textarea>
+            <button id="import">取り込む</button>
+        </details>
+
+        <p class="small">※設計は“運用前提”。あなたの周回スタイルに合わせて中身を自由に差し替えてOK。</p>
+        <p class="small">チャートの参考デザイン：mono-iki「御影：攻略チャート」（データは簡略要点のみ掲載）。</p>
+    </section>
+
+    <section id="stills">
+        <h2>スチル回収メモ</h2>
+        <div class="small">カードをタップ＝回収済／もう一度タップ＝未回収。状態はブラウザに保存されます。</div>
+
+        <div class="still-controls">
+            <input id="s_q" type="search" placeholder="例：1年目5月, 誕生日, 平日, 課外, 文化祭" style="flex:1">
+            <select id="s_tag">
+                <option value="">タグ（すべて）</option>
+                <option value="event">行事/固定日</option>
+                <option value="weekday">平日条件</option>
+                <option value="date">デート関連</option>
+                <option value="ed">ED関連</option>
+            </select>
+            <select id="s_year">
+                <option value="">年（すべて）</option>
+                <option value="1">1年目</option>
+                <option value="2">2年目</option>
+                <option value="3">3年目</option>
+            </select>
+            <label class="small"><input type="checkbox" id="s_uncol"> 未回収のみ</label>
+            <button id="s_copy">表示中をコピー</button>
+        </div>
+
+        <details>
+            <summary>CSV貼り付けで一括追加（任意）</summary>
+            <p class="small">列：ID(任意)/年(1-3)/月(1-12または空)/タグ(event/weekday/date/ed)/タイトル/条件（複数行OK）</p>
+            <textarea id="s_csv" style="width:100%;min-height:100px"></textarea>
+            <button id="s_import">取り込む</button>
+        </details>
+
+        <div id="stillCount" class="small" style="margin:8px 0"></div>
+        <div id="stillGrid" class="still-grid" aria-live="polite"></div>
+    </section>
+
+
+    <script>
+        /* ===== 初期データ（最小構成：要点だけ。自由に追記OK） =====
+   タグ色：param=青, date=黄, event=紫, ed=緑, shop=灰 */
+        // ===== 3年間チャート（要点を高密度化） =====
+        // タグ: param=パラ/育成, date=デート導線, event=行事/課外, shop=買物, ed=ED条件
+        // タグ: param=パラ/育成, date=デート導線, event=行事/課外/クラブ, shop=買物, ed=ED条件
+        const base = [
+            // ===== 1年目（4〜3） =====
+            // 4月
+            [1, 4, 'event', 'クラブ／課外授業\n4/11 新体操部に入部｜4/18 クラブ参加｜4/25 課外授業'],
+            [1, 4, 'shop', 'リッチ計画\n12月の振袖＆ドレス用に110リッチ目安を残す'],
+            [1, 4, 'param', '月末目標\n学52／芸52／運42（最低限OK）'],
+
+            // 5月
+            [1, 5, 'event', 'クラブ日\n5/16 クラブ参加'],
+            [1, 5, 'event', '誕生日\n「泥汚れ専用洗濯剤」を御影に渡す'],
+            [1, 5, 'date', '育成方針\nクラブ／勉強／はばチャを優先'],
+            [1, 5, 'param', '月末目標\n学52／芸52／運42（以後、毎月クリア）'],
+
+            // 6月
+            [1, 6, 'event', '体育祭・練習試合\n体育祭は勝利｜6/20 練習試合 勝利'],
+            [1, 6, 'param', '月末目標\n学56／芸55／運45'],
+
+            // 7月
+            [1, 7, 'event', 'テスト＆書房\nテストは中位→次回50位以上狙い｜学/流/気 各50で書房バイト可'],
+            [1, 7, 'event', 'クラブ／課外授業\n7/18 クラブ参加｜7/25 課外授業（海ならラッキー）'],
+            [1, 7, 'shop', '夏物の用意\nセクシー寄せ（黒・アクア系）を確保'],
+            [1, 7, 'param', '月末目標\n学60／芸58／運48'],
+
+            // 8月
+            [1, 8, 'event', 'クラブ日\n8/15 クラブ参加'],
+            [1, 8, 'date', '運用\nクラブ／はばチャ／勉強中心、必要に応じて休養'],
+            [1, 8, 'param', '月末目標\n学63／芸61／運51'],
+
+            // 9月
+            [1, 9, 'event', '練習試合\n9/19 勝利で補正維持'],
+            [1, 9, 'date', '運用\nクラブ／はばチャ／勉強＋休養で安定'],
+            [1, 9, 'param', '月末目標\n学67／芸64／運54'],
+
+            // 10月
+            [1, 10, 'event', 'クラブ／課外授業\n10/17 クラブ参加｜10/24 課外授業'],
+            [1, 10, 'event', '文化祭準備\n期間中は平日・休日とも文化祭コマンドを全力'],
+            [1, 10, 'param', '月末目標\n学71／芸67／運57'],
+
+            // 11月
+            [1, 11, 'event', 'クラブ日\n11/21 クラブ参加'],
+            [1, 11, 'date', '運用\n文化祭／クラブ／勉強／はばチャ／休養をバランス'],
+            [1, 11, 'param', '月末目標\n学75／芸70／運60'],
+
+            // 12月
+            [1, 12, 'shop', '買い物\n振袖＆ドレスを購入（無理なら来年でもOK）'],
+            [1, 12, 'event', '練習試合\n12/19 勝利'],
+            [1, 12, 'event', 'プレゼント\n「カラフルな軍手」 または 「オーガニックスキンケア」を渡す'],
+            [1, 12, 'param', '月末目標\n学78／芸73／運63（友好到達が目安）'],
+
+            // 1月
+            [2, 1, 'event', '初詣・課外\n御影と初詣（恋愛成就を祈願）｜1/16 クラブ参加｜1/23 課外授業'],
+            [2, 1, 'ed', '真ED①：1人の課外授業\n［条件］友好以上＋課外参加｜［日程］10〜5月の課外授業（スチル有）'],
+            [2, 1, 'param', '月末目標\n学82／芸76／運66'],
+
+            // 2月
+            [2, 2, 'event', 'バレンタイン\n手作りチョコを渡す｜2/20 クラブ参加'],
+            [2, 2, 'param', '月末目標\n学86／芸79／運69'],
+
+            // 3月
+            [2, 3, 'event', '練習試合\n3/20 勝利で補正維持'],
+            [2, 3, 'param', '月末目標\n学90／芸82／運72'],
+
+            // ===== 2年目（4〜3） =====
+            // 4月
+            [2, 4, 'event', 'クラブ／課外授業\n4/17 クラブ参加｜4/24 課外授業'],
+            [2, 4, 'param', '月末目標\n学93／芸85／運75'],
+
+            // 5月
+            [2, 5, 'event', 'クラブ日\n5/15 クラブ参加'],
+            [2, 5, 'event', '誕生日\n「工具セット」を渡す'],
+            [2, 5, 'param', '月末目標\n学97／芸88／運78'],
+
+            // 6月
+            [2, 6, 'event', '体育祭・練習試合\n体育祭は勝利｜6/19 練習試合 勝利'],
+            [2, 6, 'ed', '真ED②：モーリィ（平日）\n［条件］好感度「好き」以上｜バイト・下校イベントが無い平日（スチル有）'],
+            [2, 6, 'param', '月末目標\n学101／芸91／運81（この月に「好き」到達が目安）'],
+
+            // 7月
+            [2, 7, 'event', '課外授業\n7/24 参加｜好感度が「好き」になったら新体操→園芸へ転部推奨'],
+            [2, 7, 'param', '月末目標\n学105／芸94／運84'],
+
+            // 8月
+            [2, 8, 'date', '運用\nはばチャ／運動／クラブ／休養で安定。以後ボーダー値は厳守不要'],
+            [2, 8, 'param', '月末目標（参考）\n学108／芸97／運87'],
+
+            // 9月
+            [2, 9, 'event', '修学旅行\n御影と2人行動｜課外授業「長崎編」に参加でOK'],
+            [2, 9, 'ed', '真ED③：修学旅行（2人行動）\n2年目の修学旅行で達成（スチル有）'],
+
+            // 10月
+            [2, 10, 'event', '文化祭準備\n全力で準備。誘われたらデート可'],
+
+            // 11月
+            [2, 11, 'event', '文化祭準備\n継続でポイント確保'],
+
+            // 12月
+            [2, 12, 'event', 'プレゼント\n「カラフルな軍手」or「オーガニックスキンケア」を再度用意'],
+
+            // ===== 3年目（4〜2） =====
+            // 1月（3年目の年頭）
+            [3, 1, 'event', '初詣・課外\n振袖で初詣｜1/22 前後の課外に参加（※年次でズレ可）'],
+
+            // 2月
+            [3, 2, 'event', 'バレンタイン\n手作りチョコを渡す'],
+
+            // 3月
+            [3, 3, 'param', '調整\n運動・はばチャ・クラブで最終調整'],
+
+            // 4月
+            [3, 4, 'param', '最終育成\n2月までに学150／芸150／運120を満たす方針に切替｜4/23 課外授業'],
+
+            // 5〜6月
+            [3, 5, 'event', '誕生日\n手作りモーリィワッペンを渡す（推奨）'],
+            [3, 6, 'param', '仕上げ\n育成しつつデート回数を整える'],
+
+            // 7月（花火導線）
+            [3, 7, 'date', '花火大会導線\n（例）7/16・7/30に他キャラデート→7/31セーブ→誘い待ち'],
+            [3, 7, 'event', '課外授業\n7/23 参加'],
+
+            // 10〜11月（文化祭〜クリスマス導線）
+            [3, 10, 'event', '文化祭準備／課外\n10月の課外に参加。演目は「学園演劇」を選択'],
+            [3, 11, 'ed', '真ED④：学園演劇\n［条件］友好以上＋マリィ一位＋文化祭Pt12以上（スチル）'],
+            [3, 11, 'date', 'クリスマス導線\n11/23, 11/26に他キャラデート→12/18セーブ→24誘い待ち'],
+
+            // 12月
+            [3, 12, 'ed', '真ED⑤：クリスマス\n好感度「好き」以上＆一番高いこと（スチル）'],
+            [3, 12, 'event', 'プレゼント\n「カラフルな軍手」 or 「オーガニックスキンケア」'],
+
+            // 1〜2月（最終分岐）
+            [3, 1, 'event', '初詣・課外\n1/28 前後の課外に参加（※年次でズレ可）'],
+            [3, 2, 'event', '分岐準備\n2/13 セーブ→真＝チョコ渡す／通常＝渡さない'],
+            [3, 2, 'ed', '最終確認\nパラ最終値＆傷心≤230を確認して分岐']
+        ];
+
+
+        /* ===== UI：描画 ===== */
+        const elTimeline = document.getElementById('timeline');
+        const elQ = document.getElementById('q');
+        const elTag = document.getElementById('tag');
+        const tabs = document.querySelectorAll('#yearTabs .tab');
+
+        let rows = [...base]; // 表示用
+        let currentYear = 1;
+
+        tabs.forEach(t => t.addEventListener('click', () => {
+            tabs.forEach(x => x.classList.remove('active'));
+            t.classList.add('active');
+            currentYear = Number(t.dataset.year) || 1;
+            render();
+        }));
+
+        function render() {
+            const term = (elQ.value || '').trim().toLowerCase();
+            const tag = elTag.value;
+            elTimeline.innerHTML = '';
+            for (let m = 1; m <= 12; m++) {
+                const col = document.createElement('div');
+                col.className = 'm';
+                col.innerHTML = `<h3>${m}月</h3>`;
+                // 該当行
+                rows.filter(r => r[0] === currentYear && r[1] === m).forEach(r => {
+                    const [y, mm, t, txt, memo] = r;
+                    if (tag && t !== tag) return;
+                    const pack = (txt + ' ' + (memo || '')).toLowerCase();
+                    if (term && !pack.includes(term)) return;
+                    const pill = document.createElement('div');
+                    pill.className = 'pill ' + t;
+                    pill.textContent = txt + (memo ? `｜${memo}` : '');
+                    col.appendChild(pill);
+                });
+                elTimeline.appendChild(col);
+            }
+            document.getElementById('btnCopy').onclick = () => copyShown();
+        }
+
+        function copyShown() {
+            const out = [];
+            rows.forEach(r => {
+                const [y, mm, t, txt, memo] = r;
+                if (y !== currentYear) return;
+                // フィルタ適用
+                const term = (elQ.value || '').trim().toLowerCase();
+                if (elTag.value && t !== elTag.value) return;
+                const pack = (txt + ' ' + (memo || '')).toLowerCase();
+                if (term && !pack.includes(term)) return;
+                out.push([y, mm, t, txt, memo || ''].join('\t'));
+            });
+            navigator.clipboard.writeText(out.join('\n'));
+        }
+        elQ.oninput = render;
+        elTag.onchange = render;
+        render();
+
+        /* ===== CSV取込 ===== */
+        document.getElementById('import').onclick = () => {
+            const csv = document.getElementById('csv').value.trim();
+            if (!csv) return;
+            csv.split(/\r?\n/).forEach(line => {
+                const [y, m, t, txt, memo] = line.split(',');
+                const yy = Number(y) || 1,
+                    mm = Math.min(12, Math.max(1, Number(m) || 1));
+                rows.push([yy, mm, (t || '').trim(), (txt || '').trim(), (memo || '').trim()]);
+            });
+            render();
+        };
+
+
+
+        /* ===== スチル回収メモ ===== */
+        // 例示データ：最初は数点だけ入れておく（あなたの運用でCSVで増やせます）
+        const STILL_STORE_KEY = 'gs4_mikage_stills_v1';
+
+        /* id は一意に。year=1..3, month=1..12 or null */
+        let stills = [{
+                id: '1-05-birthday',
+                year: 1,
+                month: 5,
+                tag: 'event',
+                title: '誕生日（御影）',
+                cond: '5月：誕生日イベント\n「泥汚れ専用洗濯剤」を渡す（好感度↑）'
+            },
+            {
+                id: '1-10-kagai',
+                year: 1,
+                month: 10,
+                tag: 'event',
+                title: '課外授業（10月）',
+                cond: '10/24 課外授業に参加'
+            },
+            {
+                id: '1-11-club',
+                year: 1,
+                month: 11,
+                tag: 'event',
+                title: 'クラブ参加（固定日）',
+                cond: '11/21 新体操部に参加'
+            },
+            {
+                id: '1-12-xmas-gift',
+                year: 1,
+                month: 12,
+                tag: 'event',
+                title: '12月プレゼント',
+                cond: '「カラフルな軍手」or「オーガニックスキンケア」を渡す'
+            },
+            {
+                id: '2-06-morry',
+                year: 2,
+                month: 6,
+                tag: 'weekday',
+                title: 'モーリィ（平日）',
+                cond: '好感度「好き」以上｜バイト/下校イベントが無い平日の放課後に発生（スチル）'
+            },
+            {
+                id: '2-09-ryoko',
+                year: 2,
+                month: 9,
+                tag: 'event',
+                title: '修学旅行（2人行動）',
+                cond: '2年目 修学旅行で御影と常に2人行動＋「長崎」の課外参加（スチル）'
+            },
+            {
+                id: '3-11-gekidan',
+                year: 3,
+                month: 11,
+                tag: 'ed',
+                title: '学園演劇（真ED条件④）',
+                cond: '友好以上＋マリィ一位＋文化祭Pt12以上｜演目「学園演劇」選択（スチル）'
+            },
+            {
+                id: '3-12-xmas-true',
+                year: 3,
+                month: 12,
+                tag: 'ed',
+                title: 'クリスマス（真ED条件⑤）',
+                cond: '好感度「好き」以上＆御影が最上位（スチル）'
+            }
+        ];
+
+        // 状態（回収済）をロード
+        let collected = {};
+        try {
+            collected = JSON.parse(localStorage.getItem(STILL_STORE_KEY) || '{}')
+        } catch (e) {
+            collected = {}
+        }
+
+        const elSGrid = document.getElementById('stillGrid');
+        const elSQ = document.getElementById('s_q');
+        const elSTag = document.getElementById('s_tag');
+        const elSYear = document.getElementById('s_year');
+        const elSUncol = document.getElementById('s_uncol');
+        const elSCount = document.getElementById('stillCount');
+
+        function renderStills() {
+            const q = (elSQ.value || '').toLowerCase();
+            const tag = elSTag.value;
+            const y = elSYear.value;
+            const uncol = elSUncol.checked;
+            elSGrid.innerHTML = '';
+            let shown = 0,
+                done = 0;
+            stills.forEach(s => {
+                const pack = (s.title + ' ' + s.cond + ` ${s.year}年目 ${s.month||''}月`).toLowerCase();
+                const ok = (!q || pack.includes(q)) &&
+                    (!tag || s.tag === tag) &&
+                    (!y || String(s.year) === y) &&
+                    (!uncol || !collected[s.id]);
+                if (!ok) return;
+                shown++;
+                if (collected[s.id]) done++;
+
+                const card = document.createElement('div');
+                card.className = 'still-card' + (collected[s.id] ? ' collected' : '');
+                card.dataset.id = s.id;
+                card.innerHTML = `
+    <div class="still-title">${s.title}</div>
+    <div class="still-meta">
+        <span class="still-badge">${s.year}年目${s.month?` ${s.month}月`:''}</span>
+        <span class="still-badge">${labelOfTag(s.tag)}</span>
+        ${collected[s.id]?'<span class="still-badge">✅ 回収済</span>':''}
+    </div>
+    <div class="still-cond">${s.cond}</div>
+    `;
+                card.onclick = () => toggleCollected(s.id, card);
+                elSGrid.appendChild(card);
+            });
+            const total = stills.length;
+            const collectedCnt = Object.values(collected).filter(Boolean).length;
+            elSCount.textContent = `表示：${shown} / 全${total}　回収済：${collectedCnt}`;
+        }
+
+        function labelOfTag(t) {
+            return {
+                event: '行事/固定日',
+                weekday: '平日条件',
+                date: 'デート関連',
+                ed: 'ED関連'
+            } [t] || t;
+        }
+
+        function toggleCollected(id, card) {
+            collected[id] = !collected[id];
+            localStorage.setItem(STILL_STORE_KEY, JSON.stringify(collected));
+            if (collected[id]) card.classList.add('collected');
+            else card.classList.remove('collected');
+            renderStills();
+        }
+
+        // 検索・絞り込み
+        elSQ.oninput = renderStills;
+        elSTag.onchange = renderStills;
+        elSYear.onchange = renderStills;
+        elSUncol.onchange = renderStills;
+
+        // 取り込み（CSV）
+        document.getElementById('s_import').onclick = () => {
+            const raw = document.getElementById('s_csv').value.trim();
+            if (!raw) return;
+            raw.split(/\r?\n/).forEach(line => {
+                const [id, year, month, tag, title, ...condParts] = line.split(',');
+                const cond = condParts.join(',').trim(); // コンマ含む本文もOK
+                stills.push({
+                    id: (id || `${year}-${month}-${Date.now()}`).trim(),
+                    year: Number(year) || 1,
+                    month: month ? Number(month) : null,
+                    tag: (tag || 'event').trim(),
+                    title: (title || '').trim(),
+                    cond: cond || ''
+                });
+            });
+            renderStills();
+        };
+
+        // コピー
+        document.getElementById('s_copy').onclick = () => {
+            const rows = [];
+            // 現在のフィルタ適用後を再走査
+            const q = (elSQ.value || '').toLowerCase();
+            const tag = elSTag.value;
+            const y = elSYear.value;
+            const uncol = elSUncol.checked;
+            stills.forEach(s => {
+                const pack = (s.title + ' ' + s.cond + ` ${s.year}年目 ${s.month||''}月`).toLowerCase();
+                const ok = (!q || pack.includes(q)) &&
+                    (!tag || s.tag === tag) &&
+                    (!y || String(s.year) === y) &&
+                    (!uncol || !collected[s.id]);
+                if (!ok) return;
+                rows.push([s.id, s.year, s.month || '', s.tag, s.title, s.cond.replace(/\n/g, ' / ')].join('\t'));
+            });
+            navigator.clipboard.writeText(rows.join('\n'));
+        };
+
+        renderStills();
+
+    </script>
+</body>
+
+</html>

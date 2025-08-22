@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>GS4 御影｜ショップ商品属性（セクシー／ワイルド／ビビッド）</title>
+    <style>
+        body {
+            font-family: system-ui, "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+            margin: 0;
+            background: #fff;
+            color: #333
+        }
+
+        header {
+            padding: 14px 16px;
+            border-bottom: 1px solid #eee
+        }
+
+        h1 {
+            font-size: 18px;
+            margin: 0
+        }
+
+        .bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 10px 16px;
+            border-bottom: 1px solid #eee
+        }
+
+        input,
+        select,
+        textarea {
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 10px
+        }
+
+        .wrap {
+            padding: 10px 16px
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        th,
+        td {
+            border-bottom: 1px solid #eee;
+            padding: 8px;
+            text-align: left;
+            font-size: 14px;
+            vertical-align: top
+        }
+
+        .chip {
+            display: inline-block;
+            background: #f5f7f8;
+            border-radius: 999px;
+            padding: 2px 8px;
+            font-size: 12px;
+            margin-right: 6px
+        }
+
+        .small {
+            font-size: 12px;
+            color: #777
+        }
+
+        button {
+            padding: 8px 10px;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            background: #fff;
+            cursor: pointer
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px
+        }
+
+        .src {
+            margin-top: 8px
+        }
+
+        /* ▼色スウォッチ */
+        .colorcell {
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .swatch {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 0, 0, .1);
+            background: var(--c, #ddd);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .6);
+        }
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>御影小次郎｜ショップ商品属性（◎セクシー／◎ワイルド／○ビビッド）</h1>
+    </header>
+
+    <div class="bar">
+        <input id="q" type="search" placeholder="例：アクアブルー, セクシー, ワイルド, ビビッド, ワンピ" style="flex:1">
+        <select id="attr">
+            <option value="">属性フィルタ</option>
+            <option>セクシー</option>
+            <option>ワイルド</option>
+            <option>ビビッド</option>
+        </select>
+        <select id="shop">
+            <option value="">ショップ</option>
+            <option>レディースファッション・メルル</option>
+            <option>ブティック・ジェス</option>
+            <option>ファッション・大冒険</option>
+            <option>ガールズショップ・パステル</option>
+        </select>
+        <button id="btnCopy">表示中をコピー</button>
+    </div>
+
+    <div class="wrap">
+        <details>
+            <summary>CSV貼り付けで一括追加（任意）</summary>
+            <p class="small">列：ショップ,カテゴリー(トップス/ボトム/ワンピ/アウター/他),商品名,色,属性(複数は「/」),季節(任意),メモ（販売期間など）</p>
+            <textarea id="csv"></textarea>
+            <button id="import">取り込む</button>
+        </details>
+
+        <table id="tbl">
+            <thead>
+                <tr>
+                    <th style="width:16%">ショップ</th>
+                    <th style="width:12%">カテゴリ</th>
+                    <th style="width:22%">商品名</th>
+                    <th style="width:14%">色</th>
+                    <th style="width:14%">属性</th>
+                    <th style="width:9%">季節</th>
+                    <th>メモ</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <div class="src small">
+            出典：セクシー一覧／ビビッド一覧／ワイルドの組合せ解説（各ショップの販売期間・色・名称に準拠）
+        </div>
+    </div>
+
+    <script>
+        // ====== 御影向け：セクシー／ワイルド／ビビッド のみ収録 ======
+        const items = [
+            // —— セクシー（御影◎） ——
+            {
+                shop: "レディースファッション・メルル",
+                cat: "トップス",
+                name: "チェーンホルターキャミ",
+                color: "アクアブルー",
+                attrs: ["セクシー"],
+                season: "通年",
+                memo: "販売：1年7/1〜1年3/31／WARM5／R10"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "トップス",
+                name: "肩ひもチュニック",
+                color: "レッド",
+                attrs: ["セクシー"],
+                season: "5月",
+                memo: "販売：2年5/1〜2年5/31／R16"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "トップス",
+                name: "ヒョウ柄ストール付きTシャツ",
+                color: "ピンク",
+                attrs: ["セクシー"],
+                season: "春〜冬",
+                memo: "販売：2年5/1〜2年2/28／WARM15／R16"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "トップス",
+                name: "チェーンホルターキャミ",
+                color: "イエロー",
+                attrs: ["セクシー"],
+                season: "通年",
+                memo: "販売：2年3/1〜3年11/30／WARM10／R5"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "ボトム",
+                name: "クラッシュドホットパンツ",
+                color: "ブルー",
+                attrs: ["セクシー"],
+                season: "春〜秋",
+                memo: "販売：1年4/1〜1年1/31／WARM10／R14"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "ボトム",
+                name: "レザースカート",
+                color: "ブラック",
+                attrs: ["セクシー"],
+                season: "通年",
+                memo: "販売：1年4/1〜1年3/31／WARM15／R16"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "ボトム",
+                name: "サスペンダー付きハイウェストスカート",
+                color: "ブラック",
+                attrs: ["セクシー"],
+                season: "通年",
+                memo: "販売：1年6/1〜2年4/30／WARM15／R18"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "ボトム",
+                name: "クラッシュドホットパンツ",
+                color: "アクアブルー",
+                attrs: ["セクシー"],
+                season: "春夏",
+                memo: "販売：2年5/1〜2年3/31／WARM10／R14"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "ボトム",
+                name: "フリンジ付きスウェードスカート",
+                color: "ホワイト",
+                attrs: ["セクシー"],
+                season: "秋冬",
+                memo: "販売：2年9/1〜3年6/30／WARM10／R16"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "ボトム",
+                name: "サスペンダー付きハイウェストスカート",
+                color: "ブルー",
+                attrs: ["セクシー"],
+                season: "通年",
+                memo: "販売：2年3/1〜3年12/31／WARM15／R18"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "ボトム",
+                name: "レザースカート",
+                color: "ブラウン",
+                attrs: ["セクシー"],
+                season: "通年",
+                memo: "販売：3年7/1〜3年2/29／WARM15／R16"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "ワンピ",
+                name: "タイトワンピース",
+                color: "ブラック",
+                attrs: ["セクシー"],
+                season: "通年",
+                memo: "販売：1年4/1〜1年3/31／WARM10／R20"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "ワンピ",
+                name: "タイトワンピース",
+                color: "ホワイト",
+                attrs: ["セクシー"],
+                season: "通年",
+                memo: "販売：3年7/1〜3年2/29／WARM10／R20"
+            },
+            {
+                shop: "ブティック・ジェス",
+                cat: "トップス",
+                name: "ゼブラ模様ドレープベスト",
+                color: "ブラック",
+                attrs: ["セクシー"],
+                season: "通年",
+                memo: "販売：1年4/1〜1年3/31／WARM15／R21"
+            },
+            {
+                shop: "ファッション・大冒険",
+                cat: "トップス",
+                name: "ヒョウ柄ストール付きTシャツ",
+                color: "ホワイト",
+                attrs: ["セクシー"],
+                season: "通年",
+                memo: "販売：1年4/1〜1年3/31／WARM15／R16"
+            },
+            {
+                shop: "ファッション・大冒険",
+                cat: "ワンピ",
+                name: "ノースリーブのオールインワン",
+                color: "アクアブルー",
+                attrs: ["セクシー"],
+                season: "春夏",
+                memo: "販売：1年5/1〜2年6/30／WARM10／R20"
+            },
+            {
+                shop: "ファッション・大冒険",
+                cat: "ワンピ",
+                name: "ノースリーブのオールインワン",
+                color: "ブラック",
+                attrs: ["セクシー"],
+                season: "春夏",
+                memo: "販売：2年7/1〜3年5/31／WARM10／R20"
+            },
+
+            // —— ビビッド（御影○） ——
+            {
+                shop: "レディースファッション・メルル",
+                cat: "トップス",
+                name: "チェックブラウス",
+                color: "オレンジ",
+                attrs: ["ビビッド"],
+                season: "春秋",
+                memo: "販売：1年4/1〜1年12/31／WARM10／R15"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "トップス",
+                name: "胸ポケット付きカットソー",
+                color: "パープル",
+                attrs: ["ビビッド"],
+                season: "通年",
+                memo: "販売：1年4/1〜2年4/30／WARM20／R12"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "トップス",
+                name: "VネックTシャツ",
+                color: "パープル",
+                attrs: ["ビビッド"],
+                season: "春夏",
+                memo: "販売：1年5/1〜1年12/31／WARM10／R8"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "トップス",
+                name: "ドルマンスリーブTシャツ",
+                color: "ピンク",
+                attrs: ["ビビッド"],
+                season: "春〜秋",
+                memo: "販売：1年2/1〜2年9/30／WARM10／R8"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "トップス",
+                name: "ドルマンスリーブTシャツ",
+                color: "パープル",
+                attrs: ["ビビッド"],
+                season: "通年",
+                memo: "販売：2年2/1〜3年9/30／WARM10／R8"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "アウター",
+                name: "ショートパーカー",
+                color: "パープル",
+                attrs: ["ビビッド"],
+                season: "冬〜初春",
+                memo: "販売：2年2/1〜3年2/29／WARM20／R20"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "ボトム",
+                name: "フリルミニスカート",
+                color: "レッド",
+                attrs: ["ビビッド"],
+                season: "春夏",
+                memo: "販売：1年4/1〜1年12/31／WARM10／R15"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "ボトム",
+                name: "コーデュロイミニスカート",
+                color: "イエロー",
+                attrs: ["ビビッド"],
+                season: "秋冬",
+                memo: "販売：1年1/1〜2年9/30／WARM10／R12"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "ボトム",
+                name: "ロールアップホットパンツ",
+                color: "レッド",
+                attrs: ["ビビッド"],
+                season: "夏〜冬",
+                memo: "販売：3年7/1〜3年2/29／WARM10／R13"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "ワンピ",
+                name: "レースワンピース",
+                color: "ピンク",
+                attrs: ["ビビッド"],
+                season: "春夏",
+                memo: "販売：1年5/1〜2年8/31／WARM15／R14"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "ワンピ",
+                name: "マルチカラーワンピース",
+                color: "オレンジ",
+                attrs: ["ビビッド"],
+                season: "通年",
+                memo: "販売：1年2/1〜2年10/30／WARM10／R18"
+            },
+            {
+                shop: "ブティック・ジェス",
+                cat: "ワンピ",
+                name: "Vネックワンピース",
+                color: "ピンク",
+                attrs: ["ビビッド"],
+                season: "通年",
+                memo: "販売：2年5/1〜3年5/31／WARM15／R15"
+            },
+            {
+                shop: "ブティック・ジェス",
+                cat: "ワンピ",
+                name: "Vネックワンピース",
+                color: "グリーン",
+                attrs: ["ビビッド"],
+                season: "通年",
+                memo: "販売：3年6/1〜3年2/28／WARM15／R15"
+            },
+            {
+                shop: "ファッション・大冒険",
+                cat: "アウター",
+                name: "異素材ジャージ",
+                color: "レッド",
+                attrs: ["ビビッド"],
+                season: "秋〜春",
+                memo: "販売：1年9/1〜2年6/30／WARM20／R29"
+            },
+            {
+                shop: "ファッション・大冒険",
+                cat: "アウター",
+                name: "チェックコート",
+                color: "レッド",
+                attrs: ["ビビッド"],
+                season: "秋冬",
+                memo: "販売：2年9/1〜3年6/30／WARM40／R30"
+            },
+            {
+                shop: "ファッション・大冒険",
+                cat: "ボトム",
+                name: "シフォンキュロットパンツ",
+                color: "パープル",
+                attrs: ["ビビッド"],
+                season: "春〜冬",
+                memo: "販売：1年5/1〜1年2/28／WARM10／R12"
+            },
+            {
+                shop: "ファッション・大冒険",
+                cat: "ボトム",
+                name: "Aラインロングスカート",
+                color: "グリーン",
+                attrs: ["ビビッド"],
+                season: "通年",
+                memo: "販売：1年1/1〜2年1/31／WARM15／R16"
+            },
+            {
+                shop: "ファッション・大冒険",
+                cat: "ボトム",
+                name: "サイドラインショートパンツ",
+                color: "アクアブルー",
+                attrs: ["ビビッド"],
+                season: "春夏",
+                memo: "販売：1年3/1〜2年10/31／WARM10／R10"
+            },
+            {
+                shop: "ガールズショップ・パステル",
+                cat: "トップス",
+                name: "チェック柄ティアードチュニック",
+                color: "パープル",
+                attrs: ["ビビッド"],
+                season: "初秋",
+                memo: "販売：1年9/1〜1年9/30／WARM25／R18"
+            },
+            {
+                shop: "ガールズショップ・パステル",
+                cat: "ボトム",
+                name: "サイドラインショートパンツ",
+                color: "ピンク",
+                attrs: ["ビビッド"],
+                season: "通年",
+                memo: "販売：1年4/1〜1年3/31／WARM10／R10"
+            },
+
+            // —— ワイルド（御影◎） ——（ビビッド×セクシーの組合せ向け）
+            {
+                shop: "レディースファッション・メルル",
+                cat: "トップス",
+                name: "花柄チューブトップ",
+                color: "ピンク",
+                attrs: ["ワイルド"],
+                season: "春夏",
+                memo: "販売：1年4/1〜1年3/31（組合せ用）"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "トップス",
+                name: "チェーンホルターキャミ",
+                color: "アクアブルー",
+                attrs: ["ワイルド"],
+                season: "春夏",
+                memo: "上：セクシー源／下：ビビッド系でワイルド"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "トップス",
+                name: "ドルマンスリーブTシャツ",
+                color: "ピンク",
+                attrs: ["ワイルド"],
+                season: "春秋",
+                memo: "ビビッド底上げ"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "アウター",
+                name: "ダッフルコート",
+                color: "グレー",
+                attrs: ["ワイルド"],
+                season: "秋冬",
+                memo: "販売：1年10/1〜2年5/31"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "ボトム",
+                name: "フリルミニスカート",
+                color: "レッド",
+                attrs: ["ワイルド"],
+                season: "春夏",
+                memo: "下でビビッド稼ぎ"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "ボトム",
+                name: "レザースカート",
+                color: "ブラック",
+                attrs: ["ワイルド"],
+                season: "通年",
+                memo: "セクシー強化"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "ボトム",
+                name: "フリルキュロットパンツ",
+                color: "パープル",
+                attrs: ["ワイルド"],
+                season: "通年",
+                memo: "販売：2年4/1〜2年12/31"
+            },
+            {
+                shop: "レディースファッション・メルル",
+                cat: "トップス",
+                name: "肩ひもチュニック",
+                color: "レッド",
+                attrs: ["ワイルド"],
+                season: "5月",
+                memo: "赤×黒で強ワイルド"
+            },
+            {
+                shop: "ブティック・ジェス",
+                cat: "ワンピ",
+                name: "Vネックワンピース",
+                color: "ピンク",
+                attrs: ["ワイルド"],
+                season: "通年",
+                memo: "一体型で組みやすい"
+            },
+            {
+                shop: "ガールズショップ・パステル",
+                cat: "トップス",
+                name: "チェック柄ティアードチュニック",
+                color: "パープル",
+                attrs: ["ワイルド"],
+                season: "初秋",
+                memo: "上でビビッド、下でセクシー"
+            },
+            {
+                shop: "ファッション・大冒険",
+                cat: "ボトム",
+                name: "シフォンキュロットパンツ",
+                color: "パープル",
+                attrs: ["ワイルド"],
+                season: "春〜冬",
+                memo: "軽い下＋セクシー上"
+            },
+        ];
+
+        // ====== 色名→HEX 推定（日本語・英語・バリエーション対応） ======
+        const colorMap = new Map(Object.entries({
+            "ブラック": "#000000",
+            "黒": "#000000",
+            "black": "#000000",
+            "ホワイト": "#ffffff",
+            "白": "#ffffff",
+            "white": "#ffffff",
+            "レッド": "#e53935",
+            "赤": "#e53935",
+            "red": "#e53935",
+            "ピンク": "#e91e63",
+            "pink": "#e91e63",
+            "パープル": "#7e57c2",
+            "紫": "#7e57c2",
+            "purple": "#7e57c2",
+            "ブルー": "#2196f3",
+            "青": "#2196f3",
+            "blue": "#2196f3",
+            "アクアブルー": "#26c6da",
+            "aqua": "#26c6da",
+            "ターコイズ": "#26c6da",
+            "スカイブルー": "#29b6f6",
+            "イエロー": "#fbc02d",
+            "黄": "#fbc02d",
+            "yellow": "#fbc02d",
+            "オレンジ": "#fb8c00",
+            "orange": "#fb8c00",
+            "グリーン": "#43a047",
+            "緑": "#43a047",
+            "green": "#43a047",
+            "ブラウン": "#795548",
+            "茶": "#795548",
+            "brown": "#795548",
+            "グレー": "#9e9e9e",
+            "灰": "#9e9e9e",
+            "gray": "#9e9e9e",
+            "grey": "#9e9e9e",
+            "ダークブラウン": "#5d4037",
+            "ダークグレー": "#616161",
+            "ライトグレー": "#bdbdbd"
+        }));
+
+        function guessHex(name) {
+            if (!name) return null;
+            const n = String(name).trim();
+            // 1) そのまま
+            if (colorMap.has(n)) return colorMap.get(n);
+            // 2) 含有（例：アクアブルー×〜）
+            for (const [k, v] of colorMap.entries()) {
+                if (n.includes(k)) return v;
+            }
+            // 3) #RRGGBB を含む場合
+            const m = n.match(/#([0-9a-f]{6})/i);
+            if (m) return "#" + m[1];
+            return null;
+        }
+
+        // ====== レンダリング ======
+        const elQ = document.getElementById('q');
+        const elAttr = document.getElementById('attr');
+        const elShop = document.getElementById('shop');
+        const tbody = document.querySelector('#tbl tbody');
+
+        function render() {
+            const term = elQ.value.trim().toLowerCase();
+            const attr = elAttr.value;
+            const shop = elShop.value;
+            const shown = [];
+            tbody.innerHTML = '';
+            items.forEach(it => {
+                const text = JSON.stringify(it).toLowerCase();
+                const match = (!term || text.includes(term)) &&
+                    (!attr || it.attrs.includes(attr)) &&
+                    (!shop || it.shop === shop);
+                if (!match) return;
+                shown.push(it);
+                const hex = guessHex(it.color);
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+      <td>${it.shop}</td>
+      <td>${it.cat}</td>
+      <td>${it.name}</td>
+      <td>
+        <div class="colorcell">
+          <span class="swatch" style="--c:${hex?hex:'#ddd'}" title="${it.color}${hex?` (${hex})`:''}"></span>
+          <span>${it.color}</span>
+        </div>
+      </td>
+      <td>${(it.attrs||[]).map(a=>`<span class="chip">${a}</span>`).join('')}</td>
+      <td>${it.season||''}</td>
+      <td>${it.memo||''}</td>`;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('btnCopy').onclick = () => copyRows(shown);
+        }
+
+        function copyRows(list) {
+            const txt = list.map(it => [
+                it.shop, it.cat, it.name, it.color, (it.attrs || []).join('/'), it.season || '', it.memo || ''
+            ].join('\t')).join('\n');
+            navigator.clipboard.writeText(txt);
+        }
+        elQ.oninput = render;
+        elAttr.onchange = render;
+        elShop.onchange = render;
+        render();
+
+        // ====== CSV取り込み ======
+        document.getElementById('import').onclick = () => {
+            const csv = document.getElementById('csv').value.trim();
+            if (!csv) return;
+            csv.split(/\r?\n/).forEach(line => {
+                const [shop, cat, name, color, attrs, season, memo] = line.split(',');
+                items.push({
+                    shop: (shop || '').trim(),
+                    cat: (cat || '').trim(),
+                    name: (name || '').trim(),
+                    color: (color || '').trim(),
+                    attrs: (attrs || '').split('/').map(s => s.trim()).filter(Boolean),
+                    season: (season || '').trim(),
+                    memo: (memo || '').trim()
+                });
+            });
+            render();
+        };
+
+    </script>
+</body>
+
+</html>
