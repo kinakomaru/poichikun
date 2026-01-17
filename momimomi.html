@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>〇〇施術院｜もみほぐし・整体（○○市）</title>
+    <meta name="description" content="○○市のアットホームな施術院。もみほぐし30分〜120分。完全予約制・現金のみ。高齢の方も安心して通える、落ち着いた施術を心がけています。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;700&family=Shippori+Mincho:wght@600;700&family=Zen+Old+Mincho:wght@500;600;700&display=swap" rel="stylesheet">
+
+
+    <style>
+        /* =========================
+       ベース：派手にしない／見やすさ最優先
+       ========================= */
+        :root {
+            --bg: #faf7f2;
+            --paper: #ffffff;
+            --ink: #2a2a2a;
+            --muted: #666;
+            --line: #e8ded2;
+            --accent: #2f6f5f;
+            --accent2: #f0e5d8;
+            --shadow: 0 8px 24px rgba(0, 0, 0, .06);
+            --radius: 16px;
+            --max: 980px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Meiryo", sans-serif;
+            color: var(--ink);
+            background: var(--bg);
+            line-height: 1.7;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .wrap {
+            max-width: var(--max);
+            margin: 0 auto;
+            padding: 0 18px;
+        }
+
+        /* =========================
+       ヘッダー
+       ========================= */
+        header {
+            position: sticky;
+            top: 0;
+            background: rgba(250, 247, 242, .92);
+            backdrop-filter: blur(6px);
+            border-bottom: 1px solid var(--line);
+            z-index: 50;
+        }
+
+        .head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            gap: 12px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 220px;
+        }
+
+        .logo {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: var(--accent2);
+            border: 1px solid var(--line);
+            display: grid;
+            place-items: center;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: .08em;
+        }
+
+        .brand .name {
+            font-weight: 800;
+            letter-spacing: .02em;
+        }
+
+        .brand .sub {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: -2px;
+        }
+
+        nav {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .navbtn {
+            font-size: 13px;
+            padding: 8px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: var(--paper);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .03);
+            white-space: nowrap;
+        }
+
+        .navbtn.cta {
+            border-color: transparent;
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .navbtn.cta:hover {
+            text-decoration: none;
+            filter: brightness(1.02);
+        }
+
+        /* =========================
+       ヒーロー
+       ========================= */
+        .hero {
+            padding: 28px 0 10px;
+        }
+
+        .heroCard {
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .heroGrid {
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            gap: 0;
+        }
+
+        .heroText {
+            padding: 26px 22px;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 12px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: var(--accent2);
+            border: 1px solid var(--line);
+            color: var(--accent);
+            font-weight: 700;
+            letter-spacing: .04em;
+        }
+
+
+        h1 {
+            font-size: 30px;
+            margin: 10px 0 8px;
+            line-height: 1.25;
+            letter-spacing: .01em;
+            /* 明朝は少し広げると上品 */
+            font-family: "Zen Old Mincho", serif;
+        }
+
+        .lead {
+            color: var(--muted);
+            margin: 0 0 14px;
+        }
+
+        .heroActions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: var(--paper);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .03);
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .btn.primary {
+            border-color: transparent;
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn.primary:hover {
+            text-decoration: none;
+            filter: brightness(1.02);
+        }
+
+        .notes {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 10px;
+        }
+
+        .heroImg {
+            background: #efe7dc;
+            border-left: 1px solid var(--line);
+            min-height: 240px;
+            position: relative;
+        }
+
+        /* 仮の“素材っぽい”見た目：あなたの写真に置換する前提 */
+        .heroImg::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(47, 111, 95, .20), transparent 55%),
+                radial-gradient(circle at 80% 70%, rgba(47, 111, 95, .16), transparent 55%),
+                linear-gradient(135deg, rgba(255, 255, 255, .35), rgba(255, 255, 255, 0));
+            mix-blend-mode: multiply;
+        }
+
+        .heroImgInner {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-start;
+            padding: 18px;
+        }
+
+        .heroCaption {
+            background: rgba(255, 255, 255, .82);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 10px 12px;
+            max-width: 320px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, .06);
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        /* =========================
+       セクション共通
+       ========================= */
+        section {
+            padding: 22px 0;
+        }
+
+        .card {
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 18px;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin: 0 0 10px;
+        }
+
+        .grid2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .mini {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 6px;
+        }
+
+        .list {
+            margin: 8px 0 0;
+            padding-left: 18px;
+            color: var(--muted);
+        }
+
+        /* =========================
+       メニュー
+       ========================= */
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .menuItem {
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 12px;
+            background: #fff;
+        }
+
+        .menuItem strong {
+            display: block;
+            font-size: 15px;
+        }
+
+        .price {
+            font-weight: 800;
+            color: var(--accent);
+            margin-top: 6px;
+        }
+
+        .menuNote {
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        /* =========================
+       予約
+       ========================= */
+        .reserveBox {
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            gap: 14px;
+            align-items: start;
+        }
+
+        .steps {
+            margin: 0;
+            padding-left: 18px;
+            color: var(--muted);
+        }
+
+        .kakunin {
+            border: 1px dashed #d8c7b3;
+            background: #fff8ef;
+            border-radius: 14px;
+            padding: 12px;
+            color: #6b4a2b;
+            font-size: 13px;
+        }
+
+        .kakunin strong {
+            color: #4e3520;
+        }
+
+        /* =========================
+       アクセス
+       ========================= */
+        .dl {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 8px 12px;
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .dl dt {
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .map {
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            overflow: hidden;
+            background: #f3efe8;
+            min-height: 220px;
+        }
+
+        .mapInner {
+            padding: 14px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* =========================
+       フッター
+       ========================= */
+        footer {
+            padding: 26px 0 40px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .fine {
+            margin-top: 10px;
+            border-top: 1px solid var(--line);
+            padding-top: 12px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* =========================
+       レスポンシブ
+       ========================= */
+        @media (max-width: 860px) {
+            .heroGrid {
+                grid-template-columns: 1fr;
+            }
+
+            .heroImg {
+                border-left: none;
+                border-top: 1px solid var(--line);
+            }
+
+            .grid2 {
+                grid-template-columns: 1fr;
+            }
+
+            .menu {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .reserveBox {
+                grid-template-columns: 1fr;
+            }
+
+            .brand {
+                min-width: unset;
+            }
+        }
+
+        @media (max-width: 420px) {
+            h1 {
+                font-size: 26px;
+            }
+
+            .menu {
+                grid-template-columns: 1fr;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <!-- =========================
+       ヘッダー
+       ========================= -->
+    <header>
+        <div class="wrap">
+            <div class="head">
+                <div class="brand">
+                    <div class="logo">〇</div>
+                    <div>
+                        <div class="name">〇〇施術院</div>
+                        <div class="sub">もみほぐし・整体（○○市）</div>
+                    </div>
+                </div>
+
+                <nav>
+                    <a class="navbtn" href="#menu">メニュー</a>
+                    <a class="navbtn" href="#reserve">予約</a>
+                    <a class="navbtn" href="#access">アクセス</a>
+                    <a class="navbtn cta" href="#reserve">予約する</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- =========================
+       ヒーロー
+       ========================= -->
+    <main class="wrap">
+        <section class="hero" id="top">
+            <div class="heroCard">
+                <div class="heroGrid">
+                    <div class="heroText">
+                        <span class="badge">完全予約制・現金のみ</span>
+                        <h1>「明日が楽になる」もみほぐし。</h1>
+                        <p class="lead">
+                            あったかい雰囲気で、無理にしゃべらせない施術です。<br>
+                            肩・腰・脚など、気になるところを丁寧にほぐします。
+                        </p>
+
+                        <div class="heroActions">
+                            <a class="btn primary" href="#reserve">空き状況を見て予約リクエスト</a>
+                            <a class="btn" href="#menu">料金メニューを見る</a>
+                        </div>
+
+                        <div class="notes">
+                            ※ 初めての方も安心してどうぞ。強さはその場で調整します。<br>
+                            ※ 病院の治療が必要な症状は、まず医療機関をご案内します。
+                        </div>
+                    </div>
+
+                    <!-- ここは「仮素材」：あとで写真に差し替えOK -->
+                    <div class="heroImg" aria-label="施術イメージ">
+                        <div class="heroImgInner">
+                            <div class="heroCaption">
+                                写真はあとで差し替えできます。<br>
+                                まずは“雰囲気が伝わる”ことを優先した仮デザインです。
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================
+         こだわり / 安心ポイント
+         ========================= -->
+        <section>
+            <div class="grid2">
+                <div class="card">
+                    <h2>こんな方に</h2>
+                    <ul class="list">
+                        <li>肩や首がこって、ぼーっとする</li>
+                        <li>腰が重くて動き出しがつらい</li>
+                        <li>脚がパンパンでだるい</li>
+                        <li>眠りが浅い・疲れが抜けにくい</li>
+                    </ul>
+                    <div class="mini">※ リラクゼーション目的です。症状が強い場合は医療機関へ。</div>
+                </div>
+
+                <div class="card">
+                    <h2>アットホームに、丁寧に</h2>
+                    <ul class="list">
+                        <li>強さは「痛気持ちいい」手前で調整</li>
+                        <li>説明はわかりやすく、押しつけなし</li>
+                        <li>ご高齢の方も無理のない体勢で</li>
+                        <li>静かに受けたい方も大歓迎</li>
+                    </ul>
+                    <div class="mini">※ 勧誘・回数券の押し売りはしません。</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================
+         メニュー
+         ========================= -->
+        <section id="menu">
+            <div class="card">
+                <h2>メニュー（もみほぐし）</h2>
+                <p class="mini">価格はダミーです。あとで差し替えます。</p>
+
+                <div class="menu">
+                    <div class="menuItem">
+                        <strong>30分</strong>
+                        <div class="mini">ピンポイントに</div>
+                        <div class="price">¥0,000</div>
+                    </div>
+                    <div class="menuItem">
+                        <strong>60分</strong>
+                        <div class="mini">全身バランスよく</div>
+                        <div class="price">¥0,000</div>
+                    </div>
+                    <div class="menuItem">
+                        <strong>90分</strong>
+                        <div class="mini">特にお疲れの方向け</div>
+                        <div class="price">¥0,000</div>
+                    </div>
+                    <div class="menuItem">
+                        <strong>120分</strong>
+                        <div class="mini">ゆっくり整える</div>
+                        <div class="price">¥0,000</div>
+                    </div>
+                </div>
+
+                <div class="menuNote">
+                    お支払い：<strong>現金のみ</strong>／ 完全予約制
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================
+         予約
+         ========================= -->
+        <section id="reserve">
+            <div class="card">
+                <h2>ご予約（かんたん）</h2>
+
+                <div class="reserveBox">
+                    <div>
+                        <p class="mini">
+                            WEBは<strong>予約リクエスト</strong>です（自動確定しません）。<br>
+                            内容を確認して、こちらから折り返し（電話またはSMS）で確定します。
+                        </p>
+
+                        <ol class="steps">
+                            <li>空き状況を見る（カレンダー）</li>
+                            <li>予約リクエストを送る（フォーム）</li>
+                            <li>折り返し連絡 → 確定</li>
+                        </ol>
+
+                        <div class="heroActions" style="margin-top:12px;">
+                            <!-- ▼▼▼ あなたが差し替える場所：ここにURLを入れる ▼▼▼ -->
+                            <a class="btn primary" href="https://example.com" target="_blank" rel="noopener">空き状況（カレンダー）を見る</a>
+                            <a class="btn" href="https://example.com" target="_blank" rel="noopener">予約リクエスト（フォーム）</a>
+                            <!-- ▲▲▲ ここまで ▲▲▲ -->
+                        </div>
+
+                        <div class="notes">
+                            電話予約もOK：<strong>000-0000-0000（ダミー）</strong><br>
+                            受付時間：<strong>9:00〜18:00（ダミー）</strong>
+                        </div>
+                    </div>
+
+                    <div class="kakunin">
+                        <strong>お願い</strong><br>
+                        ・体調が悪い場合は無理せずご相談ください。<br>
+                        ・遅れそうなときは早めにお電話ください。<br>
+                        ・当日の急なキャンセルは、わかり次第ご連絡をお願いします。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================
+         アクセス
+         ========================= -->
+        <section id="access">
+            <div class="grid2">
+                <div class="card">
+                    <h2>アクセス</h2>
+                    <dl class="dl">
+                        <dt>住所</dt>
+                        <dd>○○県○○市○○（ダミー）</dd>
+                        <dt>最寄り</dt>
+                        <dd>○○駅から徒歩○分（ダミー）</dd>
+                        <dt>駐車場</dt>
+                        <dd>あり（ダミー）</dd>
+                        <dt>営業</dt>
+                        <dd>○曜日〜○曜日／○:○○〜○:○○（ダミー）</dd>
+                    </dl>
+                    <div class="mini">※ 詳細は折り返し連絡の際にご案内します。</div>
+                </div>
+
+                <div class="card">
+                    <h2>地図</h2>
+                    <div class="map">
+                        <div class="mapInner">
+                            ここはあとで Googleマップを埋め込みできます（無料）。<br>
+                            まずは “雰囲気” を見せるための仮枠です。
+                        </div>
+                    </div>
+                    <div class="mini">※ 高齢のお客さん向けに、住所を文字で載せるのが強いです。</div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="fine">
+                <div>© <span id="y"></span> 〇〇施術院</div>
+                <div><a href="#top">上に戻る</a></div>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        // 年号だけ自動。派手なJSは入れない。
+        document.getElementById("y").textContent = new Date().getFullYear();
+
+    </script>
+</body>
+
+</html>
